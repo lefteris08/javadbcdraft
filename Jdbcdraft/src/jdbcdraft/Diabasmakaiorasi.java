@@ -11,7 +11,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.sql.Date;
+//import java.time.LocalDate;
 import java.util.ArrayList;
+//import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -232,8 +236,10 @@ public class Diabasmakaiorasi {
 
     public void dimpin() {
         sind();
+
+        //mporousa epeidi dein to pairnei na to kanw append me + sto input+  
         StringBuffer sb = new StringBuffer("");
-        sb.append("CREATE TABLE birthday (Bday VARCHAR(20) ,id int(100) unsigned not null , Primary key (id),FOREIGN KEY (`id`) REFERENCES `members` (`id`));");
+        sb.append("CREATE TABLE birthday (Bday VARCHAR(20),Bday2 DATE ,id int(100) unsigned not null , Primary key (id),FOREIGN KEY (`id`) REFERENCES `members` (`id`));");
         Scanner stdin = new Scanner(System.in);
         System.out.println("What the  name ");
         String name = stdin.nextLine();
@@ -252,6 +258,25 @@ public class Diabasmakaiorasi {
                     .getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public void dokimi() {
+//Date kjm;
+//import java.sql.Date;
+        Scanner stdin = new Scanner(System.in);
+        System.out.println("imerominia");
+        String s = stdin.nextLine();
+        String[] splited = s.split("-");
+        try {
+            Integer.valueOf(splited[0]);
+            Integer.valueOf(splited[1]);
+            Integer.valueOf(splited[2]);
+            //if(splited[2]!=null)
+            LocalDate kj = LocalDate.parse(s);
+            //  kjm=Date.valueOf(kj);//.valueof(kj);
+            System.out.println(kj.toString());
+        } catch (NumberFormatException e) {
+        }
     }
 
     public void eisBirthday() {
@@ -276,12 +301,42 @@ public class Diabasmakaiorasi {
                 fname = rs.getString(1);
                 ida = rs.getInt(3);
                 lname = rs.getString(2);
-                System.out.println("dwse mou ta stoixeia gia ton " + fname + " " + lname);
-                bday = stdin.nextLine();
-                bday = bday.replaceAll("\\s+", "");
-                node.bday = bday;
-                node.id = ida;//edw issos thelei na kanei ena elexno me mia sinartisi connect kai elennxos
-                bdays.add(node);
+
+                boolean io = true;
+                while (io) {
+
+                    System.out.println("dwse mou ta stoixeia gia ton " + fname + " " + lname);
+                    bday = stdin.nextLine();
+                    // bday = bday.replaceAll("\\s+", "");
+                    node.bday = bday;
+                    System.out.println("imera  " + node.bday);
+
+                    String[] splited = bday.toString().split("-");
+                    try {
+                        int s1 = Integer.valueOf(splited[0]);
+                        int s2 =Integer.valueOf(splited[1]);
+                        int s3=Integer.valueOf(splited[2]);
+                        if (splited[0].length() == 4 && splited[1].length() == 2 && splited[2].length() == 2 && 
+                              s1>0 && s2>0 && s3>0 && s1<2017 && s2<13 && s3<32) {
+                            //if(splited[2]!=null)
+                            LocalDate bdy = LocalDate.parse(bday.toString());
+                            node.dt = Date.valueOf(bdy);
+                            node.id = ida;//edw issos thelei na kanei ena elexno me mia sinartisi connect kai elennxos
+                            bdays.add(node);
+                            io = false;
+                        } else {
+                            System.out.println("wrong input");
+
+                        }
+                    } // LocalDate kj =LocalDate.parse(s);
+                    //  kjm=Date.valueOf(kj);//.valueof(kj);
+                    // System.out.println(kj.toString());
+                    catch (NumberFormatException e) {
+                        System.out.println("lathos input");
+
+                    }
+                }
+
             }
 
             if (k == 0) {
@@ -293,18 +348,22 @@ public class Diabasmakaiorasi {
 //            conn.close();
 
             StringBuffer sb2 = new StringBuffer("");
-            sb2.append("INSERT INTO  birthday (Bday  ,id) VALUES(?,?);");
+            sb2.append("INSERT INTO  birthday (Bday  ,id,Bday2) VALUES(?,?,?);");
             pstmt = conn.prepareStatement(sb2.toString());
 
             //System.out.println(lname);
             for (bdaystoixeia string : bdays) {
-System.out.println(sb2.toString());
-               
-                pstmt.setString(1,string.bday);
-                System.out.println("exw   "+string.bday+"     kai     " +Integer.valueOf(string.id));
-                pstmt.setInt(2,string.id);
-            
-            pstmt.execute();
+                System.out.println(sb2.toString());
+
+                pstmt.setString(1, string.bday);
+                pstmt.setDate(3, string.dt);
+
+                System.out.println("exw   " + string.bday + "     kai     " + Integer.valueOf(string.id));
+                if (!exist(string.id)) {
+                    pstmt.setInt(2, string.id);
+
+                    pstmt.execute();
+                }
             }
 
         } catch (SQLException ex) {
@@ -324,4 +383,72 @@ System.out.println(sb2.toString());
         }
     }
 
+    public void join() {
+        sind();
+
+        Scanner stdin = new Scanner(System.in);
+        System.out.println("dwse mou tin imerominia ");
+        String bday = stdin.nextLine();
+        LocalDate bdy = LocalDate.parse(bday);
+
+        try {
+            stmt = conn.createStatement();
+
+            String query = "SELECT members.id,Fname, Lastname,Bday FROM catalog.members  inner join birthday  on members.id=birthday.id and birthday.Bday='" + bday + "';";
+            ResultSet rs = stmt.executeQuery(query);
+            int k = 0;
+            while (rs.next()) {
+                System.out.print(" to id einai " + rs.getInt(1));
+                k++;
+                System.out.print("Firstname : " + rs.getString(2));
+                System.out.print(", LastName : " + rs.getString(3));
+                System.out.println(", bday : " + rs.getString(4));
+                // System.out.print(", Til2 : " + rs.getString(5));
+                //System.out.print(" to id einai " + rs.getInt(1));
+
+            }
+            if (k < 1) {
+                System.out.println("den brethike xristis");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Diabasmakaiorasi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public boolean exist(int id) {
+        try {
+            Statement el = conn.createStatement();
+
+            String query = "Select * from catalog.birthday where id = '" + id + "'";
+            ResultSet rs = el.executeQuery(query);
+            int k = 0;
+            while (rs.next()) {
+                k++;
+            }
+            if (k > 0) {
+                rs.close();
+                System.out.println("EXEIS IDI PANOGRAPSEI SE AUTON TON XRISTI");
+                return true;
+            } else {
+                rs.close();
+                return false;
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Diabasmakaiorasi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return true;
+
+    }
+
+    /*
+    {SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
+FROM Orders
+INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID;
+    }    
+     */
 }

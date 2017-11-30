@@ -5,6 +5,11 @@
  */
 package jdbcdraft;
 
+//import java.sql.Date;
+
+import java.sql.Date;
+
+
 /**
  *
  * @author lefte
@@ -12,6 +17,6 @@ package jdbcdraft;
 public class bdaystoixeia {
     String bday;
    int id;
-    
+    Date dt;
     
 }

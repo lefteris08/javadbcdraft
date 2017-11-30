@@ -19,28 +19,41 @@ public class Jdbcdraft {
     public static void main(String[] args) {
         Scanner stdin = new Scanner(System.in);
         String epilogi = "";
-        int ep;
+        int ep=92039;
         String lname = "";
-        System.out.println("epelexe:\n 0 gia na deis oles tis times\n 1 gia na baleis 5 times \n 2 gia na alaxeis me basi to last name \n 3 na deos tis times me basi  fname lname\n 4 gia na deis posa record exeis \n 5 na dimiourgiseis ena pinaka \n 6 na baleis ta stoixeia ston birthdays meso tou member \n 7 des pioi anthropoi exoun tin idia imerominia ");
-        epilogi = stdin.nextLine();
-        ep = Integer.valueOf(epilogi);
+        //System.out.println("epelexe:\n 0 gia na deis oles tis times\n 1 gia na baleis 5 times \n 2 gia na alaxeis me basi to last name \n 3 na deos tis times me basi  fname lname\n 4 gia na deis posa record exeis \n 5 na dimiourgiseis ena pinaka \n 6 na baleis ta stoixeia ston birthdays meso tou member \n 7 des pioi anthropoi exoun tin idia imerominia ");
+        //epilogi = stdin.nextLine();
+      //   ep = Integer.valueOf(epilogi);
 
         Diabasmakaiorasi kl = new Diabasmakaiorasi();
+        while (ep != 11) {
+        System.out.println("epelexe:\n 0 gia na deis oles tis times\n 1 gia na baleis 5 times \n 2 gia na alaxeis me basi to last name \n 3 na deos tis times me basi  fname lname\n 4 gia na deis posa record exeis \n 5 na dimiourgiseis ena pinaka \n 6 na baleis ta stoixeia ston birthdays meso tou member \n 7 des pioi anthropoi exoun tin idia imerominia ");
+        epilogi = stdin.nextLine();
 
-        if (ep == 0) {
-            kl.Diabasmakaiorasi();
-        }
-        if (ep == 1) {
-            kl.insertInt();
-        } else if (ep == 2) {
-            kl.changeN();
-        } else if (ep == 3) {
-            kl.showrec();
-        } else if (ep == 4) {
-        } else if (ep == 5) {
-            kl.dimpin();
-        } else if (ep == 6) {
-            kl.eisBirthday();
+        ep = Integer.valueOf(epilogi);
+
+            
+            if (ep == 0) {
+                kl.Diabasmakaiorasi();
+            }
+            if (ep == 64) {
+                kl.dokimi();
+            } 
+            
+            if (ep == 1) {
+                kl.insertInt();
+            } else if (ep == 2) {
+                kl.changeN();
+            } else if (ep == 3) {
+                kl.showrec();
+            } else if (ep == 4) {
+            } else if (ep == 5) {
+                kl.dimpin();
+            } else if (ep == 6) {
+                kl.eisBirthday();
+            } else if (ep == 7) {
+                kl.join();
+            }
         }
     }
 }
